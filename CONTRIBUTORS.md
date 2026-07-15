@@ -17,7 +17,7 @@ Bahçeşehir University · AI Engineering Capstone · June 2026
 
 | Name | Focus areas |
 |------|-------------|
-| Mohammed Ahmed Al-Labani | Dataset capture, analytics layer (speed, queue, violations) |
+| [Mohammed Ahmed Al-Labani](https://github.com/Mohammedbau) | Dataset capture, analytics layer (speed, queue, violations) |
 | Mohamed Dribika | YOLOv11 training, evaluation pipeline, tracking metrics |
 | [Omar Kamal Jayyusi](https://github.com/OJayyusiO) | ByteTrack integration, CARLA scenarios, collision detection |
 
