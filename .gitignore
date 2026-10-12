@@ -78,3 +78,9 @@ CLAUDE.md
 
 # macOS duplicate filenames
 * copy.*
+
+# Local traffic videos - do not upload to GitHub
+*.mp4
+
+# Local traffic videos - do not upload to GitHub
+*.mp4
