@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import (
+    analysis,
     cameras,
     chat,
     emergency,
@@ -59,6 +60,7 @@ app.include_router(experiments.router, prefix="/api/experiments", tags=["experim
 app.include_router(policy_variants.router, prefix="/api/policy/variants", tags=["policy"])
 app.include_router(runs.router, prefix="/api/runs", tags=["runs"])
 app.include_router(cameras.router, prefix="/api/cameras", tags=["cameras"])
+app.include_router(analysis.router, prefix="/api/analysis", tags=["analysis"])
 app.include_router(chat.router)
 app.include_router(ws_router)
 

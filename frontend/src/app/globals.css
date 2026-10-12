@@ -2,13 +2,159 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── MargDrishti CSS custom properties ─────────────────────────────────────
+   These mirror the Tailwind token values so components can use var() when
+   Tailwind JIT won't reach (e.g. SVG strokes, gradient stops).
+   Theme is driven by the `dark` class on <html> — no full-page reload needed.
+────────────────────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* Light theme (default) */
+  --bg:             #F3F6F8;
+  --surface:        #FFFFFF;
+  --surface-elevated: #FFFFFF;
+  --border:         #DCE3E8;
+  --text-emphasis:  #0D1820;
+  --text-primary:   #1C2B36;
+  --text-subtle:    #4E6372;
+  --text-muted:     #90A4B0;
+
+  --signal-green:   #176B4A;
+  --signal-amber:   #B66A00;
+  --signal-red:     #B42318;
+
+  /* Status colors with accessible contrast on light surface */
+  --status-completed-bg:   #EDFAF3;
+  --status-completed-text: #176B4A;
+  --status-running-bg:     #FFF8E6;
+  --status-running-text:   #B66A00;
+  --status-failed-bg:      #FFF2F1;
+  --status-failed-text:    #B42318;
+  --status-blocked-bg:     #F5F6F8;
+  --status-blocked-text:   #4E6372;
+  --status-ready-bg:       #EFF4FF;
+  --status-ready-text:     #1A4DAA;
+  --status-not-started-bg: #F5F6F8;
+  --status-not-started-text:#7A96AD;
+
+  --sidebar-width-expanded: 280px;
+  --sidebar-width-compact:  64px;
+  --header-height:          52px;
+}
+
+.dark {
+  /* Dark theme */
+  --bg:             #141D24;
+  --surface:        #202B35;
+  --surface-elevated: #28363F;
+  --border:         #364654;
+  --text-emphasis:  #FFFFFF;
+  --text-primary:   #D2E3ED;
+  --text-subtle:    #7A96AD;
+  --text-muted:     #4B6074;
+
+  /* Status colors readable on dark charcoal surfaces */
+  --status-completed-bg:   rgba(23, 107, 74, 0.18);
+  --status-completed-text: #4ADE80;
+  --status-running-bg:     rgba(182, 106, 0, 0.18);
+  --status-running-text:   #FBBF24;
+  --status-failed-bg:      rgba(180, 35, 24, 0.18);
+  --status-failed-text:    #F87171;
+  --status-blocked-bg:     rgba(54, 70, 84, 0.4);
+  --status-blocked-text:   #7A96AD;
+  --status-ready-bg:       rgba(26, 77, 170, 0.18);
+  --status-ready-text:     #93C5FD;
+  --status-not-started-bg: rgba(54, 70, 84, 0.25);
+  --status-not-started-text:#4B6074;
+}
+
+/* ── Base resets ────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* ── Reduced-motion compliance ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ── Sidebar transitions (respect reduced motion) ───────────────────────── */
+[data-sidebar] {
+  transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Scrollbar styling ──────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Workflow connector line (vertical step track) ──────────────────────── */
+.workflow-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+  transform: translateX(-50%);
+}
+
+/* ── Utility: theme-aware card ──────────────────────────────────────────── */
+@layer utilities {
+  .md-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06);
+  }
+
+  .md-card-elevated {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
+  }
+
+  .md-text-emphasis  { color: var(--text-emphasis); }
+  .md-text-primary   { color: var(--text-primary); }
+  .md-text-subtle    { color: var(--text-subtle); }
+  .md-text-muted     { color: var(--text-muted); }
+  .md-border         { border-color: var(--border); }
+  .md-bg             { background: var(--bg); }
+  .md-surface        { background: var(--surface); }
+  .md-surface-elevated { background: var(--surface-elevated); }
 }

@@ -307,3 +307,56 @@ export interface ExperimentUpdateMessage {
   run_idx: number | null;
   experiment: ComparisonExperiment;
 }
+
+export interface VideoMetadata {
+  filename: string;
+  width: number;
+  height: number;
+  fps: number;
+  total_video_frames: number;
+  processed_frames: number;
+  video_duration_seconds: number;
+  processing_time_seconds: number;
+}
+
+export interface VideoAnalysisMetrics {
+  total_detection_instances: number;
+  unique_tracked_vehicles: number;
+  line_crossings_count: number;
+}
+
+export interface VideoClassBreakdown {
+  unique_vehicles: Record<string, number>;
+  line_crossings: Record<string, number>;
+  total_detections: Record<string, number>;
+}
+
+export interface VideoTimeSeriesPoint {
+  second: number;
+  active_detections: number;
+  unique_vehicles_so_far: number;
+  crossings_so_far: number;
+}
+
+export interface VideoAnalysisResult {
+  job_id: string;
+  status: "queued" | "processing" | "completed" | "failed";
+  video_metadata: VideoMetadata;
+  metrics: VideoAnalysisMetrics;
+  class_breakdown: VideoClassBreakdown;
+  time_series: VideoTimeSeriesPoint[];
+  artifacts: {
+    annotated_video_url: string;
+    annotated_video_filename: string;
+  };
+}
+
+export interface AnalysisJobStatusResponse {
+  job_id: string;
+  status: "queued" | "processing" | "completed" | "failed";
+  progress_pct: number;
+  current_frame: number;
+  total_frames: number;
+  error_message: string | null;
+  result: VideoAnalysisResult | null;
+}

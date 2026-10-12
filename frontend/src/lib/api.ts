@@ -165,9 +165,52 @@ export const api = {
   cancelEmergency: (vehicleId: string) =>
     request(`/emergency/${encodeURIComponent(vehicleId)}`, { method: "DELETE" }),
 
+  // Video Analysis (YOLOv11 + ByteTrack)
+  uploadVideoForAnalysis: async (
+    file: File,
+    options?: { confidence_threshold?: number; max_frames?: number; frame_stride?: number }
+  ): Promise<{ job_id: string; filename: string; file_size_bytes: number; status: string; message: string }> => {
+    const formData = new FormData();
+    formData.append("video", file);
+    if (options?.confidence_threshold !== undefined) {
+      formData.append("confidence_threshold", options.confidence_threshold.toString());
+    }
+    if (options?.max_frames !== undefined) {
+      formData.append("max_frames", options.max_frames.toString());
+    }
+    if (options?.frame_stride !== undefined) {
+      formData.append("frame_stride", options.frame_stride.toString());
+    }
+
+    const res = await fetch(`${API_BASE}/analysis/upload-and-analyze`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: res.statusText }));
+      throw new Error(err.detail || `Upload failed with HTTP ${res.status}`);
+    }
+    return res.json();
+  },
+
+  getAnalysisJobStatus: (jobId: string) =>
+    request<{
+      job_id: string;
+      status: "queued" | "processing" | "completed" | "failed";
+      progress_pct: number;
+      current_frame: number;
+      total_frames: number;
+      error_message: string | null;
+      result: import("./types").VideoAnalysisResult | null;
+    }>(`/analysis/status/${encodeURIComponent(jobId)}`),
+
   // NOTE: camera streams are consumed directly via <img src> using
   // API_BASE + `/cameras/{id}/{approach}/stream`, so no fetch wrapper.
 };
+
+export const getAnnotatedVideoUrl = (filename: string) =>
+  `${API_BASE}/analysis/video/${encodeURIComponent(filename)}`;
+
 
 export const cameraStreamUrl = (intersectionId: string, approach: string) =>
   `${API_BASE}/cameras/${intersectionId}/${approach}/stream`;
